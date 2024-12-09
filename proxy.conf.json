@@ -1,0 +1,10 @@
+{
+  "/api/quotes": {
+    "target": "https://secret-message-api.netlify.app/.netlify/functions/server",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/quotes": ""
+    },
+    "changeOrigin": true
+  }
+}
