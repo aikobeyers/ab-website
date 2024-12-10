@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, model, OnInit, signal} from '@angular/core';
 import {SecretMessageApiService} from "../../services/secret-message-api.service";
 import {filter, take, tap} from "rxjs";
 import {QuoteWithId} from "../../models/Quote";
@@ -13,7 +13,7 @@ import {
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
 import {MatCheckbox} from "@angular/material/checkbox";
-import {MatFormField, MatInput} from "@angular/material/input";
+import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
@@ -36,6 +36,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MatFormField,
     FormsModule,
     MatButton,
+    MatLabel,
     MatHeaderCellDef,
     MatCellDef,
     MatHeaderRowDef,
@@ -51,12 +52,16 @@ export class SecretMessageConfigPageComponent implements OnInit {
   rowToUpdate = signal<string>('');
   showNewRow = signal(false);
 
+  newQuote = model('');
+  newQuoteDisplay = model(false);
+
   dialogRef: MatDialogRef<DialogComponent> | undefined;
 
   readonly dialog = inject(MatDialog);
   private readonly api = inject(SecretMessageApiService);
 
   constructor() {
+    //TODO figure out why this is not triggered when closing the dialog
     this.dialog.afterAllClosed
       .pipe(
         filter(() => {
@@ -64,6 +69,7 @@ export class SecretMessageConfigPageComponent implements OnInit {
         }),
         tap(() => {
           if (this.dialogRef?.componentInstance.quote() && this.dialogRef?.componentInstance.display()) {
+            console.log(this.dialogRef?.componentInstance.quote(), this.dialogRef?.componentInstance.display())
             this.api.newQuote({
               quote: this.dialogRef?.componentInstance.quote(),
               display: this.dialogRef?.componentInstance.display()
@@ -133,10 +139,25 @@ export class SecretMessageConfigPageComponent implements OnInit {
 
   openDialog() {
     this.showNewRow.set(true);
-    this.dialogRef = this.dialog.open(DialogComponent, {
+    /*this.dialogRef = this.dialog.open(DialogComponent, {
       width: '250px',
       enterAnimationDuration: '100ms',
       exitAnimationDuration: '100ms',
-    });
+    });*/
+  }
+
+  addQuote(){
+    this.api.newQuote({
+      quote: this.newQuote(),
+      display: this.newQuoteDisplay()
+    })
+      .pipe(
+        tap(newQuote => {
+          this.quotes.set([...this.quotes(), newQuote]);
+          this.showNewRow.set(false);
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 }
