@@ -3,7 +3,9 @@ import {HttpClient} from "@angular/common/http";
 import {Quote, QuoteWithId} from "../models/Quote";
 import {Observable, take} from "rxjs";
 
-const BASE_URL: string = '/api/quotes';
+import { environment } from '../../environments/environment';
+
+const BASE_URL: string = environment.baseUrl;
 
 @Injectable({
   providedIn: 'root'
