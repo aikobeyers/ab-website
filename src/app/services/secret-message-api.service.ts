@@ -25,6 +25,10 @@ export class SecretMessageApiService {
     return this.http.get<QuoteWithId[]>(BASE_URL);
   }
 
+  getRandomQuote(): Observable<QuoteWithId> {
+    return this.http.get<QuoteWithId>(`${BASE_URL}/random`);
+  }
+
   getSingleQuote(id: string): Observable<QuoteWithId> {
     return this.http.get<QuoteWithId>(`${BASE_URL}/${id}`);
   }
