@@ -243,4 +243,5 @@ export class SecretMessageConfigPageComponent implements OnInit {
       this.openDialog();
     }, 3585000)
   }
+
 }
