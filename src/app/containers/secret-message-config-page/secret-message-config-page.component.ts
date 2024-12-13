@@ -1,6 +1,6 @@
-import {Component, inject, model, OnInit, signal} from '@angular/core';
+import {Component, inject, Input, model, OnInit, signal} from '@angular/core';
 import {SecretMessageApiService} from "../../services/secret-message-api.service";
-import {filter, take, tap} from "rxjs";
+import {catchError, filter, skip, take, tap, throwError} from "rxjs";
 import {QuoteWithId} from "../../models/Quote";
 import {
   MatCell, MatCellDef,
@@ -18,7 +18,12 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {DialogComponent} from "../../components/dialog/dialog.component";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {takeUntilDestroyed, toObservable} from "@angular/core/rxjs-interop";
+import {AuthService} from "../../services/auth.service";
+import {User} from "../../models/User";
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {ActivatedRoute} from "@angular/router";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-secret-message-config-page',
@@ -40,7 +45,8 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MatHeaderCellDef,
     MatCellDef,
     MatHeaderRowDef,
-    MatRowDef
+    MatRowDef,
+    MatProgressSpinner
   ],
   templateUrl: './secret-message-config-page.component.html',
   styleUrl: './secret-message-config-page.component.scss',
@@ -57,12 +63,23 @@ export class SecretMessageConfigPageComponent implements OnInit {
 
   dialogRef: MatDialogRef<DialogComponent> | undefined;
 
+  username = model<string>('');
+  password = model<string>('');
+
   readonly dialog = inject(MatDialog);
+  loginInProgress = signal(false);
+
   private readonly api = inject(SecretMessageApiService);
+  private readonly auth = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
+
+  isLoggedIn = this.auth.isLoggedIn;
+
+  timeout?: any;
 
   constructor() {
     //TODO figure out why this is not triggered when closing the dialog
-    this.dialog.afterAllClosed
+    /*this.dialog.afterAllClosed
       .pipe(
         filter(() => {
           return this.dialogRef?.componentInstance.quote() !== undefined && this.dialogRef?.componentInstance.display() !== undefined
@@ -86,10 +103,41 @@ export class SecretMessageConfigPageComponent implements OnInit {
         }),
         takeUntilDestroyed()
       ).subscribe();
+*/
+    this.dialog.afterAllClosed
+      .pipe(
+        skip(1),
+        tap(() => {
+          console.log('dialog closed');
+          console.log(this.isLoggedIn());
+
+          clearTimeout(this.timeout);
+          if(this.isLoggedIn()){
+            this.startTokenTimer();
+          }
+        }),
+        takeUntilDestroyed()
+      )
+      .subscribe()
+    toObservable(this.isLoggedIn)
+      .pipe(
+        filter(isLoggedIn => isLoggedIn),
+        tap(() => {
+          this.getAllQuotes();
+        }),
+      ).subscribe();
   }
 
   ngOnInit(): void {
-    this.getAllQuotes();
+    this.route.data
+      .pipe(
+        filter(data => data['isWindowReloadedWhenLoggedIn']),
+        tap(data => {
+          console.log('page refreshed from log in state', data['isWindowReloadedWhenLoggedIn']);
+          this.startTokenTimer();
+        }),
+      )
+      .subscribe()
   }
 
   getAllQuotes() {
@@ -138,15 +186,15 @@ export class SecretMessageConfigPageComponent implements OnInit {
   }
 
   openDialog() {
-    this.showNewRow.set(true);
-    /*this.dialogRef = this.dialog.open(DialogComponent, {
+    this.dialogRef = this.dialog.open(DialogComponent, {
       width: '250px',
       enterAnimationDuration: '100ms',
       exitAnimationDuration: '100ms',
-    });*/
+      disableClose: true
+    });
   }
 
-  addQuote(){
+  addQuote() {
     this.api.newQuote({
       quote: this.newQuote(),
       display: this.newQuoteDisplay()
@@ -159,5 +207,40 @@ export class SecretMessageConfigPageComponent implements OnInit {
         take(1)
       )
       .subscribe();
+  }
+
+  login() {
+    this.loginInProgress.set(true);
+    const user: User = {
+      username: this.username(),
+      password: this.password(),
+    }
+
+    this.auth.login(user)
+      .pipe(
+        tap(res => {
+          this.auth.setLoginState(res.token);
+          this.loginInProgress.set(false);
+          this.startTokenTimer();
+        }),
+        catchError(error => {
+          this.loginInProgress.set(false);
+          return throwError(() => error);
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  logout() {
+    this.auth.logout();
+    clearTimeout(this.timeout);
+  }
+
+  startTokenTimer() {
+    console.log('timer started');
+    this.timeout = setTimeout(() => {
+      this.openDialog();
+    }, 3585000)
   }
 }

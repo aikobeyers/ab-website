@@ -5,6 +5,7 @@ import {
 import {
   SecretMessageConfigPageComponent
 } from "./containers/secret-message-config-page/secret-message-config-page.component";
+import {TokenResolverService} from "./services/token-resolver.service";
 
 export const routes: Routes = [
   {
@@ -13,6 +14,11 @@ export const routes: Routes = [
   },
   {
     path: 'you/should/not',
-    component: SecretMessageConfigPageComponent
+    component: SecretMessageConfigPageComponent,
+    resolve: { isWindowReloadedWhenLoggedIn: TokenResolverService }
+  },
+  {
+    path: '**',
+    redirectTo: 'you/should/not/look/here',
   }
 ];

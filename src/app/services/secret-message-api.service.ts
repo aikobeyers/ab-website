@@ -4,6 +4,7 @@ import {Quote, QuoteWithId} from "../models/Quote";
 import {Observable, take} from "rxjs";
 
 import { environment } from '../../environments/environment';
+import {AuthService} from "./auth.service";
 
 const BASE_URL: string = environment.baseUrl;
 
@@ -12,17 +13,18 @@ const BASE_URL: string = environment.baseUrl;
 })
 export class SecretMessageApiService {
 
-  private readonly http = inject(HttpClient)
+  private readonly http = inject(HttpClient);
+  private readonly auth = inject(AuthService);
 
   constructor() {
   }
 
   newQuote(newQuote: Quote):Observable<QuoteWithId>{
-    return this.http.post<QuoteWithId>(BASE_URL, newQuote);
+    return this.http.post<QuoteWithId>(BASE_URL, newQuote, { headers: {'Authorization': this.auth.token() ?? ''}});
   }
 
   getAllQuotes(): Observable<QuoteWithId[]> {
-    return this.http.get<QuoteWithId[]>(BASE_URL);
+    return this.http.get<QuoteWithId[]>(BASE_URL, { headers: {'Authorization': this.auth.token() ?? ''}});
   }
 
   getRandomQuote(): Observable<QuoteWithId> {
@@ -34,10 +36,10 @@ export class SecretMessageApiService {
   }
 
   deleteQuote(id: string) {
-    return this.http.delete<void>(`${BASE_URL}/${id}`).pipe(take(1));
+    return this.http.delete<void>(`${BASE_URL}/${id}`, { headers: {'Authorization': this.auth.token() ?? ''}}).pipe(take(1));
   }
 
   updateQuote(updatedQuote: QuoteWithId): Observable<QuoteWithId> {
-    return this.http.put<QuoteWithId>(`${BASE_URL}/${updatedQuote._id}`, updatedQuote).pipe(take(1))
+    return this.http.put<QuoteWithId>(`${BASE_URL}/${updatedQuote._id}`, updatedQuote, { headers: {'Authorization': this.auth.token() ?? ''}}).pipe(take(1))
   }
 }
