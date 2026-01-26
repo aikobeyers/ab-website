@@ -1,6 +1,6 @@
 export type TdQuote = {
-    name: string;
-    quote: string;
+    by: string;
+    value: string;
     date: string;
 }
 

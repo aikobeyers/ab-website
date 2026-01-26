@@ -1,0 +1,19 @@
+.td-quotes-overview--header{
+    padding: 16px;;
+
+    display: flex;
+    justify-content: space-between;
+
+    .header--title{
+        display: flex;
+        flex:1;
+        margin-left: 24px;
+
+        justify-content: center;
+        align-items: center;
+    }
+
+}
+.td-quotes-overview--container{
+    padding: 24px 16px;
+}

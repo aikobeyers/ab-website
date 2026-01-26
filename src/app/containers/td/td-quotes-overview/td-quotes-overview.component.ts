@@ -1,24 +1,25 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { TdQuotesService } from '../../../services/td-quotes.service';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { JsonPipe } from '@angular/common';
+import { TdQuoteCardComponent } from "./components/td-quote-card/td-quote-card.component";
+import { CommonModule } from '@angular/common';
+import { MatIcon } from "@angular/material/icon";
 
 @Component({
   selector: 'app-td-quotes-overview',
-  imports: [JsonPipe],
+  imports: [TdQuoteCardComponent, CommonModule, MatIcon],
   templateUrl: './td-quotes-overview.component.html',
   styleUrl: './td-quotes-overview.component.scss'
 })
 export class TdQuotesOverviewComponent implements OnInit {
+  private readonly tdQuotesService = inject(TdQuotesService);
 
-  public quotes: any;
-
-  public constructor(private readonly tdQuotesService: TdQuotesService) {
-    this.quotes = toSignal(this.tdQuotesService.getAllTdQuotes());
-  }
+  public quotes = toSignal(
+    this.tdQuotesService.getAllTdQuotes(), { initialValue: [] }
+  );
 
   public ngOnInit(): void {
-    console.log('test');
-    
+    console.log('Hqllo');
+  
   }
 }
