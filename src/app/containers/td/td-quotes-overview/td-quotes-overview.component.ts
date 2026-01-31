@@ -5,6 +5,7 @@ import { TdQuoteCardComponent } from "./components/td-quote-card/td-quote-card.c
 import { CommonModule } from '@angular/common';
 import { MatIcon } from "@angular/material/icon";
 import { Title } from '@angular/platform-browser';
+import { FiltersStore } from '../../../stores/filters.store';
 
 @Component({
   selector: 'app-td-quotes-overview',
@@ -16,6 +17,7 @@ import { Title } from '@angular/platform-browser';
 export class TdQuotesOverviewComponent implements OnInit {
   private readonly tdQuotesService = inject(TdQuotesService);
   private readonly titleService = inject(Title);
+  private readonly store = inject(FiltersStore);
 
   public quotes = toSignal(
     this.tdQuotesService.getAllTdQuotes(), { initialValue: [] }
@@ -23,6 +25,6 @@ export class TdQuotesOverviewComponent implements OnInit {
 
   public ngOnInit(): void {
     this.titleService.setTitle('TD Quotes');
-  
+    console.log('Filter by:', this.store.getFilterBy());
   }
 }

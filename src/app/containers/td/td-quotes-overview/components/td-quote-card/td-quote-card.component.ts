@@ -11,9 +11,6 @@ export class TdQuoteCardComponent {
   public tdQuote = input<TdQuoteWithId>();
 
   constructor() {
-    effect(() => {
-      console.log('TdQuoteCardComponent tdQuote changed:', this.tdQuote());
-    });
   }
 
 }
