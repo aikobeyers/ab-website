@@ -1,1 +1,8 @@
-<p>td-quote-filters works!</p>
+
+<button routerLink="../">Back</button>
+
+@for(author of authors(); track author){
+    <div class="filter--author">
+        <label (click)="addAuthor(author)">{{author}}</label>
+    </div>
+}

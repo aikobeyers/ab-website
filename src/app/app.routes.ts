@@ -7,6 +7,7 @@ import {
 } from "./containers/secret-message-config-page/secret-message-config-page.component";
 import {TokenResolverService} from "./services/token-resolver.service";
 import { TdQuotesOverviewComponent } from './containers/td/td-quotes-overview/td-quotes-overview.component';
+import { TdQuoteFiltersComponent } from './containers/td/td-quote-filters/td-quote-filters.component';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'td/quotes',
     component: TdQuotesOverviewComponent
+  },
+  {
+    path: 'td/quotes/filter',
+    component: TdQuoteFiltersComponent
   },
   {
     path: '**',
