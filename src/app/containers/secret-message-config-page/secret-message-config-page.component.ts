@@ -21,7 +21,6 @@ import {DialogComponent} from "../../components/dialog/dialog.component";
 import {takeUntilDestroyed, toObservable} from "@angular/core/rxjs-interop";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../models/User";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 import {ActivatedRoute} from "@angular/router";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
