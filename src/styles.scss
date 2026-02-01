@@ -7,7 +7,11 @@ html, body {
 body {
   margin: 0;
   font-family: "Avenir", sans-serif;
-  background-color: #faf9fd;
+  background-color: #f6f6f6;
+}
+
+body.filters--open {
+  overflow: hidden;
 }
 
 html, body { height: 100%; width: 100dvw; }

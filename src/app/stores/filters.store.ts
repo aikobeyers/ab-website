@@ -1,22 +1,29 @@
 import { Injectable } from '@angular/core';
 import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { computed } from '@angular/core';
+import { TdQuote, TdQuoteWithId } from '../models/TdQuote';
 
 export type FiltersState = {
-    by: string[];
-    quoteQuery: string;
+    filters:{
+        by: string[];
+        quoteQuery: string;
+    };
     authors: string[];
+  quotes: TdQuoteWithId[];
 };
 
 const initialFiltersState: FiltersState = {
-    by: [],
-    quoteQuery: '',
+    filters: {
+        by: [],
+        quoteQuery: '',
+    },
     authors: [],
+    quotes: [],
 };
 
 export const FiltersStore = signalStore(
   { providedIn: 'root' },
-  withState({ filters: initialFiltersState }),
+  withState(initialFiltersState),
   withMethods((store) => ({
     setFilterBy(by: string[]): void {
       patchState(store, { filters: { ...store.filters(), by } });
@@ -24,14 +31,17 @@ export const FiltersStore = signalStore(
     setQuoteQuery(quoteQuery: string): void {
       patchState(store, { filters: { ...store.filters(), quoteQuery } });
     },
-    setFilters(filters: Partial<FiltersState>): void {
+    setFilters(filters: Partial<{ by: string[]; quoteQuery: string }>): void {
       patchState(store, { filters: { ...store.filters(), ...filters } });
     },
     setAuthors(authors: string[]): void {
-      patchState(store, { filters: { ...store.filters(), authors } });
+      patchState(store, { authors });
+    },
+    setQuotes(quotes: TdQuoteWithId[]): void {
+      patchState(store, { quotes });
     },
     resetFilters(): void {
-      patchState(store, { filters: {...store.filters(), by: [], quoteQuery: '' } });
+      patchState(store, { filters: { by: [], quoteQuery: '' } });
     },
     toggleAuthor(author: string): void {
       const currentAuthors = store.filters().by;
@@ -45,6 +55,7 @@ export const FiltersStore = signalStore(
   withComputed((store) => ({
     filterBy: computed(() => store.filters().by),
     quoteQuery: computed(() => store.filters().quoteQuery),
-    authors: computed(() => store.filters().authors),
+    authors: computed(() => store.authors()),
+    quotes: computed(() => store.quotes()),
   }))
 );

@@ -1,19 +1,23 @@
-.td-quotes-overview--header{
-    padding: 16px;;
+.td-quotes-overview--wrapper{
+    position: relative;
+            .td-quotes-overview--header{
+        padding: 16px;;
 
-    display: flex;
-    justify-content: space-between;
-
-    .header--title{
         display: flex;
-        flex:1;
-        margin-left: 24px;
+        justify-content: space-between;
 
-        justify-content: center;
-        align-items: center;
+        .header--title{
+            display: flex;
+            flex:1;
+            margin-left: 24px;
+
+            justify-content: center;
+            align-items: center;
+        }
+
+    }   
+    .td-quotes-overview--container{
+        padding: 24px 16px;
     }
+}
 
-}
-.td-quotes-overview--container{
-    padding: 24px 16px;
-}

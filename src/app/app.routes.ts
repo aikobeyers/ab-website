@@ -24,10 +24,6 @@ export const routes: Routes = [
     component: TdQuotesOverviewComponent
   },
   {
-    path: 'td/quotes/filter',
-    component: TdQuoteFiltersComponent
-  },
-  {
     path: '**',
     redirectTo: 'you/should/not/look/here',
   }

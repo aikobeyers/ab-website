@@ -1,12 +1,13 @@
-
-<button routerLink="../">Back</button>
-
-<button (click)="resetFilters()">Reset</button>
-
-<div class="author-filter--container">
-    @for(author of authors(); track author){
-    <div class="author-filter--item" [class.selected]="isSelected(author)">
-        <label (click)="toggleAuthor(author)">{{author}}</label>
+<div class="filters--wrapper" [ngClass]="{open: isOpen, closed: !isOpen}">
+    <div class="filters--header">
+        <mat-icon fontIcon="arrow_back_ios" (click)="closeFilters()"></mat-icon>
     </div>
-}
+
+    <div class="author-filter--container">
+        @for(author of authors(); track author){
+        <div class="author-filter--item" [class.selected]="isSelected(author)">
+            <label (click)="toggleAuthor(author)">{{author}}</label>
+        </div>
+    }
+    </div>
 </div>
