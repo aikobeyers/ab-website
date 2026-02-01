@@ -1,0 +1,30 @@
+.author-filter--container{
+    padding: 16px;
+
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .author-filter--item{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 16px;
+        // border: 1px solid #ccc;
+        border-radius: 100px;
+        background-color: #ffffff;
+        box-shadow: 0 3px 7px #0000001f;
+        cursor: pointer;
+
+        &:active{
+            background-color: #e0e0e0;
+        }
+
+        &.selected{
+
+            border: 1px solid #7e7e7e;
+            font-weight: 500;
+
+        }
+    }
+}

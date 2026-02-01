@@ -1,8 +1,12 @@
 
 <button routerLink="../">Back</button>
 
-@for(author of authors(); track author){
-    <div class="filter--author">
-        <label (click)="addAuthor(author)">{{author}}</label>
+<button (click)="resetFilters()">Reset</button>
+
+<div class="author-filter--container">
+    @for(author of authors(); track author){
+    <div class="author-filter--item" [class.selected]="isSelected(author)">
+        <label (click)="toggleAuthor(author)">{{author}}</label>
     </div>
 }
+</div>

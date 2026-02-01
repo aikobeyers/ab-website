@@ -13,14 +13,16 @@ export class TdQuoteFiltersComponent {
 
   public authors = this.store.authors;
 
-  addAuthor(author: string): void {    
-    this.store.addAuthor(author);
-    console.log('Current author filters are', this.store.filterBy());
-    
+  toggleAuthor(author: string): void {    
+    this.store.toggleAuthor(author);    
   }
 
-  removeAuthor(author: string): void {
-    this.store.removeAuthor(author);
+  isSelected(author: string): boolean {
+    return this.store.filterBy().includes(author);
+  }
+
+  resetFilters(): void {
+    this.store.resetFilters();
   }
 }
  

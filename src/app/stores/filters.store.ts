@@ -31,18 +31,15 @@ export const FiltersStore = signalStore(
       patchState(store, { filters: { ...store.filters(), authors } });
     },
     resetFilters(): void {
-      patchState(store, { filters: { by: [], quoteQuery: '', authors: [] } });
+      patchState(store, { filters: {...store.filters(), by: [], quoteQuery: '' } });
     },
-    addAuthor(author: string): void {
-        console.log('Adding author:', author);
+    toggleAuthor(author: string): void {
       const currentAuthors = store.filters().by;
-      if (!currentAuthors.includes(author)) {
+      if (currentAuthors.includes(author)) {
+        patchState(store, { filters: { ...store.filters(), by: currentAuthors.filter(a => a !== author) } });
+      } else {
         patchState(store, { filters: { ...store.filters(), by: [...currentAuthors, author] } });
       }
-    },
-    removeAuthor(author: string): void {
-      const currentAuthors = store.filters().by;
-      patchState(store, { filters: { ...store.filters(), by: currentAuthors.filter(a => a !== author) } });
     },
   })),
   withComputed((store) => ({
