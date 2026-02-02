@@ -8,6 +8,7 @@ import { Title } from '@angular/platform-browser';
 import { FiltersStore } from '../../../stores/filters.store';
 import { RouterLink } from "@angular/router";
 import { TdQuoteFiltersComponent } from "../td-quote-filters/td-quote-filters.component";
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-td-quotes-overview',
@@ -17,7 +18,7 @@ import { TdQuoteFiltersComponent } from "../td-quote-filters/td-quote-filters.co
   styleUrl: './td-quotes-overview.component.scss'
 })
 export class TdQuotesOverviewComponent implements OnInit {
-    @ViewChild('filters')
+  @ViewChild('filters')
   private filtersComponent!: TdQuoteFiltersComponent;
 
   private readonly tdQuotesService = inject(TdQuotesService);
@@ -35,14 +36,14 @@ export class TdQuotesOverviewComponent implements OnInit {
   }
 
   public toggleFilters(): void {
-    this.filtersComponent.toggleSelf();
+    this.filtersComponent.openFilters();
   }
 
-  public getQuotes(): void {
-    console.log('Getting quotes');
-    
-    this.tdQuotesService.getTdQuotes().subscribe((quotes) => {
-      this.store.setQuotes(quotes);
-    });
+  public getQuotes(skip = false): void {    
+    if (!skip) {
+      this.tdQuotesService.getTdQuotes().pipe(take(1)).subscribe((quotes) => {
+        this.store.setQuotes(quotes);
+      });
+    }
   }
 }

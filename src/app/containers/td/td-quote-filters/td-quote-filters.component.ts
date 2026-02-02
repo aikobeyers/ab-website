@@ -15,13 +15,24 @@ export class TdQuoteFiltersComponent implements OnDestroy {
   private readonly document = inject(DOCUMENT);
 
   public authors = this.store.authors;
+  public quoteQuery = this.store.quoteQuery;
 
   public isOpen = false;
 
-  public closeFiltersEmitter = output<void>();
+  public filterSnapshot? :{ by: string[]; quoteQuery: string };
+
+  public closeFiltersEmitter = output<boolean>();
 
   toggleAuthor(author: string): void {    
     this.store.toggleAuthor(author);    
+  }
+
+  setTextFilter(filter: string): void {
+    this.store.setQuoteQuery(filter);
+  }
+
+  clearTextFilter(): void {
+    this.store.setQuoteQuery('');
   }
 
   isSelected(author: string): boolean {
@@ -32,17 +43,19 @@ export class TdQuoteFiltersComponent implements OnDestroy {
     this.store.resetFilters();
   }
 
-  toggleSelf(): void {
-    this.setOpen(!this.isOpen);
-  }
-
-  closeFilters (): void {
+  closeFilters (revert = false): void {
+    
+    if(revert && this.filterSnapshot) {
+      this.store.setFilters(this.filterSnapshot);
+    }
     this.setOpen(false);
-    this.closeFiltersEmitter.emit();
+    this.filterSnapshot = undefined;
+    this.closeFiltersEmitter.emit(revert);
   }
 
   openFilters(): void {
     this.setOpen(true);
+    this.filterSnapshot = this.takeFiltersSnapshot();
   }
 
   ngOnDestroy(): void {
@@ -52,6 +65,13 @@ export class TdQuoteFiltersComponent implements OnDestroy {
   private setOpen(isOpen: boolean): void {
     this.isOpen = isOpen;
     this.document.body.classList.toggle('filters--open', isOpen);
+  }
+
+  private takeFiltersSnapshot(): { by: string[]; quoteQuery: string } {
+    return {
+      by: [...this.store.filterBy()],
+      quoteQuery: this.store.quoteQuery(),
+    };
   }
 }
  
