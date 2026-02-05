@@ -4,11 +4,24 @@
         <mat-icon fontIcon="filter_alt" (click)="toggleFilters()"></mat-icon>
     </div>
     <div class="td-quotes-overview--container">
-        @for(tdQuote of quotes(); track tdQuote; let last = $last){
-            <div [ngStyle]="{ 'margin-bottom.px': last ? 0 : 12 }">
-                <td-quote-card class="td-quotes-overview--card" [tdQuote]="tdQuote"/>
-            </div>
+        @if(isLoading()) {
+        @for (i of [].constructor(10); track $index; let last = $last) {
+        <div [ngStyle]="{ 'margin-bottom.px': last ? 0 : 12 }">
+            <td-quote-card class="td-quotes-overview--card" [isSkeleton]="true" />
+        </div>
         }
+
+        } @else {
+        @for(tdQuote of quotes(); track tdQuote; let last = $last){
+        <div [ngStyle]="{ 'margin-bottom.px': last ? 0 : 12 }">
+            <td-quote-card class="td-quotes-overview--card" [tdQuote]="tdQuote" />
+        </div>
+        }
+
+
+
+        }
+
     </div>
 </div>
 <app-td-quote-filters #filters (closeFiltersEmitter)="getQuotes($event)"></app-td-quote-filters>

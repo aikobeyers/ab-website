@@ -11,7 +11,7 @@ import {NgStyle} from "@angular/common";
   styleUrl: './skeleton.component.scss'
 })
 export class SkeletonComponent {
-  width = input<number>();
-  height = input<number>();
+  width = input<number | string>();
+  height = input<number | string>();
   borderRadius = input<number>();
 }

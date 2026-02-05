@@ -27,9 +27,13 @@ export class TdQuotesOverviewComponent implements OnInit {
 
   public quotes = this.store.quotes
 
+  public isLoading = signal(false);
+
   public ngOnInit(): void {
     this.titleService.setTitle('TD Quotes');
-    this.tdQuotesService.getAuthors().subscribe((authors) => {
+    this.tdQuotesService.getAuthors()
+    .pipe(take(1))
+    .subscribe((authors) => {
       this.store.setAuthors(authors);
     });
     this.getQuotes();
@@ -41,8 +45,10 @@ export class TdQuotesOverviewComponent implements OnInit {
 
   public getQuotes(skip = false): void {    
     if (!skip) {
+      this.isLoading.set(true);
       this.tdQuotesService.getTdQuotes().pipe(take(1)).subscribe((quotes) => {
         this.store.setQuotes(quotes);
+        this.isLoading.set(false);
       });
     }
   }

@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { signalStore, withState, withMethods, patchState, withComputed } from '@ngrx/signals';
 import { computed } from '@angular/core';
 import { TdQuote, TdQuoteWithId } from '../models/TdQuote';
+import { TdQuoteAuthorWithId } from '../models/TdQuoteAuthor';
 
 export type FiltersState = {
     filters:{
         by: string[];
         quoteQuery: string;
     };
-    authors: string[];
+    authors: TdQuoteAuthorWithId[];
   quotes: TdQuoteWithId[];
 };
 
@@ -34,7 +35,7 @@ export const FiltersStore = signalStore(
     setFilters(filters: Partial<{ by: string[]; quoteQuery: string }>): void {
       patchState(store, { filters: { ...store.filters(), ...filters } });
     },
-    setAuthors(authors: string[]): void {
+    setAuthors(authors: TdQuoteAuthorWithId[]): void {
       patchState(store, { authors });
     },
     setQuotes(quotes: TdQuoteWithId[]): void {

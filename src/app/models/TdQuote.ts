@@ -1,5 +1,7 @@
+import { TdQuoteAuthorWithId } from "./TdQuoteAuthor";
+
 export type TdQuote = {
-    by: string;
+    by: TdQuoteAuthorWithId;
     value: string;
     date: string;
 }
