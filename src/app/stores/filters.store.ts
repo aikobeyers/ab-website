@@ -41,6 +41,9 @@ export const FiltersStore = signalStore(
     setQuotes(quotes: TdQuoteWithId[]): void {
       patchState(store, { quotes });
     },
+    addQuote(quote: TdQuoteWithId): void {
+      patchState(store, { quotes: [...store.quotes(), quote] });
+    },
     resetFilters(): void {
       patchState(store, { filters: { by: [], quoteQuery: '' } });
     },

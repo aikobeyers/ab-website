@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { TdQuoteWithId } from '../models/TdQuote';
 import { TdQuoteAuthorWithId } from '../models/TdQuoteAuthor';
 import { FiltersStore } from '../stores/filters.store';
+import { Observable } from 'rxjs';
 
 const BASE_URL: string = environment.baseUrl;
 
@@ -35,7 +36,7 @@ export class TdQuotesService {
     return this.http.get<TdQuoteWithId[]>(`${BASE_URL}/tdquotes/get`, { params });
   }
 
-  public createQuote(req: {value: string, date: string, by: string | undefined | null, newAuthor: string| undefined | null}) {
-    return this.http.post(`${BASE_URL}/tdquotes/create`, req);
+  public createQuote(req: {value: string, date: string, by: string | undefined | null, newAuthor: string| undefined | null}): Observable<TdQuoteWithId> {
+    return this.http.post<TdQuoteWithId>(`${BASE_URL}/tdquotes/create`, req);
   }
 }

@@ -10,6 +10,7 @@ import { RouterLink } from "@angular/router";
 import { TdQuoteFiltersComponent } from "../td-quote-filters/td-quote-filters.component";
 import { take } from 'rxjs';
 import { TdQuoteCreateComponent } from "../td-quote-create/td-quote-create.component";
+import { TdQuoteWithId } from '../../../models/TdQuote';
 
 @Component({
   selector: 'app-td-quotes-overview',
@@ -64,8 +65,8 @@ export class TdQuotesOverviewComponent implements OnInit {
   }
 
   public createQuote(quoteData: {value: string, date: string, by: string | undefined | null, newAuthor: string| undefined | null}): void {
-    this.tdQuotesService.createQuote(quoteData).pipe(take(1)).subscribe(() => {
-      this.getQuotes();
+    this.tdQuotesService.createQuote(quoteData).pipe(take(1)).subscribe((res: TdQuoteWithId) => {
+      this.store.addQuote(res);
     });
   }
 }
