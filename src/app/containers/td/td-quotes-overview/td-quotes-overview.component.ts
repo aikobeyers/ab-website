@@ -9,17 +9,23 @@ import { FiltersStore } from '../../../stores/filters.store';
 import { RouterLink } from "@angular/router";
 import { TdQuoteFiltersComponent } from "../td-quote-filters/td-quote-filters.component";
 import { take } from 'rxjs';
+import { TdQuoteCreateComponent } from "../td-quote-create/td-quote-create.component";
 
 @Component({
   selector: 'app-td-quotes-overview',
   providers: [Title],
-  imports: [TdQuoteCardComponent, CommonModule, MatIcon, TdQuoteFiltersComponent],
+  imports: [TdQuoteCardComponent, CommonModule, MatIcon, TdQuoteFiltersComponent, TdQuoteCreateComponent],
   templateUrl: './td-quotes-overview.component.html',
   styleUrl: './td-quotes-overview.component.scss'
 })
 export class TdQuotesOverviewComponent implements OnInit {
   @ViewChild('filters')
   private filtersComponent!: TdQuoteFiltersComponent;
+
+  @ViewChild('create')
+  private createComponent!: TdQuoteCreateComponent;
+
+
 
   private readonly tdQuotesService = inject(TdQuotesService);
   private readonly titleService = inject(Title);
@@ -39,8 +45,12 @@ export class TdQuotesOverviewComponent implements OnInit {
     this.getQuotes();
   }
 
-  public toggleFilters(): void {
+  public openFilters(): void {
     this.filtersComponent.openFilters();
+  }
+
+  public openCreate(): void {
+    this.createComponent.openCreate();
   }
 
   public getQuotes(skip = false): void {    
@@ -51,5 +61,11 @@ export class TdQuotesOverviewComponent implements OnInit {
         this.isLoading.set(false);
       });
     }
+  }
+
+  public createQuote(quoteData: {value: string, date: string, by: string | undefined | null, newAuthor: string| undefined | null}): void {
+    this.tdQuotesService.createQuote(quoteData).pipe(take(1)).subscribe(() => {
+      this.getQuotes();
+    });
   }
 }

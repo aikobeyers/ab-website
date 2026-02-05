@@ -1,7 +1,8 @@
 <div class="td-quotes-overview--wrapper">
     <div class="td-quotes-overview--header">
+        <mat-icon fontIcon="add_2" class="add-icon" (click)="openCreate()"></mat-icon>
         <div class="header--title">TD Quotes</div>
-        <mat-icon fontIcon="filter_alt" (click)="toggleFilters()"></mat-icon>
+        <mat-icon fontIcon="filter_alt" (click)="openFilters()"></mat-icon>
     </div>
     <div class="td-quotes-overview--container">
         @if(isLoading()) {
@@ -17,11 +18,9 @@
             <td-quote-card class="td-quotes-overview--card" [tdQuote]="tdQuote" />
         </div>
         }
-
-
-
         }
 
     </div>
 </div>
 <app-td-quote-filters #filters (closeFiltersEmitter)="getQuotes($event)"></app-td-quote-filters>
+<app-td-quote-create #create (closeCreateEmitter)="getQuotes($event)" (createQuoteEmitter)="createQuote($event)"></app-td-quote-create>

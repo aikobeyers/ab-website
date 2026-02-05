@@ -34,4 +34,8 @@ export class TdQuotesService {
 
     return this.http.get<TdQuoteWithId[]>(`${BASE_URL}/tdquotes/get`, { params });
   }
+
+  public createQuote(req: {value: string, date: string, by: string | undefined | null, newAuthor: string| undefined | null}) {
+    return this.http.post(`${BASE_URL}/tdquotes/create`, req);
+  }
 }
