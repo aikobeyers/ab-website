@@ -52,6 +52,7 @@
         width: 100%;
         min-height: 100px;
         font-family: "Avenir", sans-serif;
+        font-size: 16px;
         resize: vertical;
 
         &:focus-visible {
@@ -96,6 +97,7 @@
             border: 1px solid lightgray;
             width: calc(100% - 0px);
             box-sizing: border-box;
+            font-size: 16px;
 
             &:focus-visible {
                 outline: none;
