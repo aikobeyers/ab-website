@@ -1,16 +1,36 @@
-.td-quotes-overview--wrapper{
+.td-quotes-overview--wrapper {
     position: relative;
-            .td-quotes-overview--header{
-        padding: 16px;;
+
+    max-width: 500px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .td-quotes-overview--header {
+        padding: 16px;
+        
 
         display: flex;
         justify-content: space-between;
         align-items: center;
+        column-gap: 8px;
 
-        .header--title{
+        position: sticky;
+        top: 0;
+        background-color: #f6f6f6;
+        z-index: 100;
+        transition: box-shadow 0.2s ease-in-out;
+
+        &.scrolled {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .header--title {
             display: flex;
-            flex:1;
-            margin-left: 24px;
+            flex: 1;
+            margin-left: 32px;
 
             justify-content: center;
             align-items: center;
@@ -22,9 +42,17 @@
             height: 32px;
         }
 
-    }   
-    .td-quotes-overview--container{
+        .gamepad-icon {
+            font-size: 28px;
+            width: 28px;
+            height: 28px;
+        }
+
+    }
+
+    .td-quotes-overview--container {
+        flex: 1;
         padding: 24px 16px;
+        overflow-y: auto;
     }
 }
-

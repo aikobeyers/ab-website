@@ -11,11 +11,12 @@ import { TdQuoteFiltersComponent } from "../td-quote-filters/td-quote-filters.co
 import { take } from 'rxjs';
 import { TdQuoteCreateComponent } from "../td-quote-create/td-quote-create.component";
 import { TdQuoteWithId } from '../../../models/TdQuote';
+import { TdQuoteGameComponent } from "../td-quote-game/td-quote-game.component";
 
 @Component({
   selector: 'app-td-quotes-overview',
   providers: [Title],
-  imports: [TdQuoteCardComponent, CommonModule, MatIcon, TdQuoteFiltersComponent, TdQuoteCreateComponent],
+  imports: [TdQuoteCardComponent, CommonModule, MatIcon, TdQuoteFiltersComponent, TdQuoteCreateComponent, TdQuoteGameComponent],
   templateUrl: './td-quotes-overview.component.html',
   styleUrl: './td-quotes-overview.component.scss'
 })
@@ -26,7 +27,11 @@ export class TdQuotesOverviewComponent implements OnInit {
   @ViewChild('create')
   private createComponent!: TdQuoteCreateComponent;
 
+   @ViewChild('game')
+  private gameComponent!: TdQuoteGameComponent;
 
+   @ViewChild('container')
+  private containerElement: any;
 
   private readonly tdQuotesService = inject(TdQuotesService);
   private readonly titleService = inject(Title);
@@ -35,6 +40,7 @@ export class TdQuotesOverviewComponent implements OnInit {
   public quotes = this.store.quotes
 
   public isLoading = signal(false);
+  public hasScrolled = signal(false);
 
   public ngOnInit(): void {
     this.titleService.setTitle('TD Quotes');
@@ -46,12 +52,21 @@ export class TdQuotesOverviewComponent implements OnInit {
     this.getQuotes();
   }
 
+  public onScroll(event: Event): void {
+    const target = event.target as HTMLElement;
+    this.hasScrolled.set(target.scrollTop > 0);
+  }
+
   public openFilters(): void {
     this.filtersComponent.openFilters();
   }
 
   public openCreate(): void {
     this.createComponent.openCreate();
+  }
+
+  public openGame(): void {
+    this.gameComponent.openGame();
   }
 
   public getQuotes(skip = false): void {    

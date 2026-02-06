@@ -1,0 +1,16 @@
+<div class="game--backdrop" [ngClass]="{open: isOpen, closed: !isOpen}" (click)="closeGame()">
+    <div class="game--box" (click)="$event.stopPropagation()">
+        <div class="game--header">
+            <mat-icon fontIcon="close" (click)="closeGame()"></mat-icon>
+        </div>
+        <div class="game--content">
+            <!-- Game content goes here -->
+            @if(isLoading()) {
+            <app-skeleton [width]="80" [height]="19" [borderRadius]="5" />
+
+            } @else {
+            <div class="game-content">"{{ randomQuote()?.value }}"</div>
+            }
+        </div>
+    </div>
+</div>
