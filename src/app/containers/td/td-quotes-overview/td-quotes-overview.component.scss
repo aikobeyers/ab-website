@@ -30,7 +30,6 @@
         .header--title {
             display: flex;
             flex: 1;
-            margin-left: 32px;
 
             justify-content: center;
             align-items: center;
@@ -42,7 +41,7 @@
             height: 32px;
         }
 
-        .gamepad-icon {
+        .gamepad-icon, .leaderboard-icon {
             font-size: 28px;
             width: 28px;
             height: 28px;

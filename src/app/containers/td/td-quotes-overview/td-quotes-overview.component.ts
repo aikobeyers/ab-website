@@ -12,11 +12,12 @@ import { take } from 'rxjs';
 import { TdQuoteCreateComponent } from "../td-quote-create/td-quote-create.component";
 import { TdQuoteWithId } from '../../../models/TdQuote';
 import { TdQuoteGameComponent } from "../td-quote-game/td-quote-game.component";
+import { TdQuotesLeaderboardComponent } from "../td-quotes-leaderboard/td-quotes-leaderboard.component";
 
 @Component({
   selector: 'app-td-quotes-overview',
   providers: [Title],
-  imports: [TdQuoteCardComponent, CommonModule, MatIcon, TdQuoteFiltersComponent, TdQuoteCreateComponent, TdQuoteGameComponent],
+  imports: [TdQuoteCardComponent, CommonModule, MatIcon, TdQuoteFiltersComponent, TdQuoteCreateComponent, TdQuoteGameComponent, TdQuotesLeaderboardComponent],
   templateUrl: './td-quotes-overview.component.html',
   styleUrl: './td-quotes-overview.component.scss'
 })
@@ -29,6 +30,9 @@ export class TdQuotesOverviewComponent implements OnInit {
 
    @ViewChild('game')
   private gameComponent!: TdQuoteGameComponent;
+
+   @ViewChild('leaderboard')
+  private leaderboardComponent!: TdQuotesLeaderboardComponent;
 
    @ViewChild('container')
   private containerElement: any;
@@ -67,6 +71,10 @@ export class TdQuotesOverviewComponent implements OnInit {
 
   public openGame(): void {
     this.gameComponent.openGame();
+  }
+
+  public openLeaderboard(): void {
+    this.leaderboardComponent.openLeaderboard();
   }
 
   public getQuotes(skip = false): void {    
