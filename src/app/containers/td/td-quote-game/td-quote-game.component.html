@@ -1,15 +1,27 @@
 <div class="game--backdrop" [ngClass]="{open: isOpen, closed: !isOpen}" (click)="closeGame()">
-    <div class="game--box" (click)="$event.stopPropagation()">
+    <div class="game--box" [ngClass]="{authors: gameStage() === 'authors'}" (click)="$event.stopPropagation()">
         <div class="game--header">
+            <div class="game--header-quote" [ngClass]="{visible: gameStage() === 'authors'}">"{{ randomQuote()?.value }}"</div>
             <mat-icon fontIcon="close" (click)="closeGame()"></mat-icon>
         </div>
         <div class="game--content">
-            <!-- Game content goes here -->
-            @if(isLoading()) {
-            <app-skeleton [width]="80" [height]="19" [borderRadius]="5" />
-
-            } @else {
-            <div class="game-content">"{{ randomQuote()?.value }}"</div>
+            @if(gameStage() === 'quote') {
+                @if(isLoading()) {
+                <app-skeleton [width]="80" [height]="19" [borderRadius]="5" />
+                } @else {
+                <div class="game-content" [ngClass]="{hidden: gameStage() === 'authors'}">"{{ randomQuote()?.value }}"</div>
+                <div class="game--next-row">
+                    <mat-icon fontIcon="east" class="game--next-icon" (click)="showAuthors()"></mat-icon>
+                </div>
+                }
+            } @else if(gameStage() === 'authors') {
+                <div class="game--authors-container">
+                    @for(author of authors(); track author) {
+                    <div class="game--author-item">
+                        <div>{{ author.name }}</div>
+                    </div>
+                    }
+                </div>
             }
         </div>
     </div>
