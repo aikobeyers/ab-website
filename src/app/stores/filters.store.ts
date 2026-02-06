@@ -44,6 +44,13 @@ export const FiltersStore = signalStore(
     addQuote(quote: TdQuoteWithId): void {
       patchState(store, { quotes: [...store.quotes(), quote] });
     },
+    addAuthor(author: TdQuoteAuthorWithId): void {
+      const authors = store.authors();
+      const exists = authors.some(a => a._id === author._id);
+      if (!exists) {
+        patchState(store, { authors: [...authors, author] });
+      }
+    },
     updateAuthor(updatedAuthor: TdQuoteAuthorWithId): void {
       const authors = store.authors();
       const index = authors.findIndex(a => a._id === updatedAuthor._id);

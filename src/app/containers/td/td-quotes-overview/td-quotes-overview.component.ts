@@ -90,6 +90,9 @@ export class TdQuotesOverviewComponent implements OnInit {
   public createQuote(quoteData: {value: string, date: string, by: string | undefined | null, newAuthor: string| undefined | null}): void {
     this.tdQuotesService.createQuote(quoteData).pipe(take(1)).subscribe((res: TdQuoteWithId) => {
       this.store.addQuote(res);
+      if (res.by && quoteData.newAuthor) {
+        this.store.addAuthor(res.by);
+      }
     });
   }
 }
