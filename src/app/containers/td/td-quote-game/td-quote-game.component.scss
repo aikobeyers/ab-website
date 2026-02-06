@@ -38,7 +38,7 @@
     .game--box {
         width: calc(100vw - 32px);
         max-width: calc(100vw - 32px);
-        max-height: 150px;
+        max-height: 300px;
         background-color: #ffffff;
         border-radius: 16px;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -78,6 +78,15 @@
                     opacity: 1;
                     transform: translateY(0);
                 }
+            }
+
+            .game--header-title {
+                flex: 1;
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                text-align: left;
+                padding-right: 12px;
             }
 
             mat-icon {
@@ -150,6 +159,142 @@
                     }
                 }
             }
+
+            .game--question-row {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                width: 100%;
+                margin-top: 24px;
+                color: #666;
+
+                .game--question-text {
+                    font-weight: 500;
+                }
+
+                .game--question-icon {
+                    color: #666;
+                    margin-left: auto;
+                    line-height: 1;
+
+                    &.disabled {
+                        opacity: 0.4;
+                        pointer-events: none;
+                    }
+
+                    &.game--spinner {
+                        color: #2196F3;
+                        animation: spin 1s linear infinite;
+                    }
+                }
+            }
+
+            .game--correct {
+                font-size: 24px;
+                font-weight: 600;
+                color: #2e7d32;
+                text-align: center;
+                animation: pop 0.35s ease-out;
+            }
+
+            .game--incorrect {
+                font-size: 24px;
+                font-weight: 600;
+                color: #c62828;
+                text-align: center;
+                animation: pop 0.35s ease-out;
+            }
+
+            .game--leaderboard {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                animation: pop 0.35s ease-out;
+
+                .game--leaderboard-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+
+                    .game--leaderboard-item {
+                        display: flex;
+                        align-items: center;
+                        padding: 12px 16px;
+                        background-color: #f5f5f5;
+                        border-radius: 8px;
+                        gap: 16px;
+
+                        .game--leaderboard-rank {
+                            font-size: 20px;
+                            font-weight: 700;
+                            color: #666;
+                            min-width: 32px;
+                            text-align: center;
+                        }
+
+                        .game--leaderboard-name {
+                            flex: 1;
+                            font-size: 16px;
+                            font-weight: 500;
+                            color: #333;
+                        }
+
+                        .game--leaderboard-score {
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #2e7d32;
+                        }
+
+                        &:first-child {
+                            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+
+                            .game--leaderboard-rank {
+                                color: #b8860b;
+                            }
+                        }
+
+                        &:nth-child(2) {
+                            background: linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%);
+
+                            .game--leaderboard-rank {
+                                color: #808080;
+                            }
+                        }
+
+                        &:nth-child(3) {
+                            background: linear-gradient(135deg, #cd7f32 0%, #e09856 100%);
+
+                            .game--leaderboard-rank {
+                                color: #8b5a2b;
+                            }
+                        }
+                    }
+                }
+            }
         }
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }

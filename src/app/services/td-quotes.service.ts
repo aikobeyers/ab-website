@@ -43,4 +43,8 @@ export class TdQuotesService {
   public getRandomQuote(): Observable<TdQuoteWithId> {
     return this.http.get<TdQuoteWithId>(`${BASE_URL}/tdquotes/random`);
   }
+
+  public updateAuthorScore(authorId: string): Observable<TdQuoteAuthorWithId> {
+    return this.http.put<TdQuoteAuthorWithId>(`${BASE_URL}/tdquotes/authors/${authorId}/score`, {});
+  }
 }

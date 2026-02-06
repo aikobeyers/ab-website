@@ -1,4 +1,4 @@
-import { Component, inject, output, OnDestroy, signal } from '@angular/core';
+import { Component, inject, output, OnDestroy, signal, computed } from '@angular/core';
 import { DOCUMENT, NgClass } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { TdQuotesService } from '../../../services/td-quotes.service';
@@ -20,10 +20,18 @@ export class TdQuoteGameComponent implements OnDestroy {
 
   public isOpen = false;
   public isLoading = signal(false);
+  public isUpdatingScore = signal(false);
 
   public randomQuote = signal<TdQuoteWithId | null>(null);
-  public gameStage = signal<'quote' | 'authors'>('quote');
+  public gameStage = signal<'quote' | 'authors' | 'correct' | 'incorrect' | 'guesser' | 'leaderboard'>('quote');
   public authors = this.store.authors;
+  public topThree = computed(() => {
+    return [...this.authors()]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 3);
+  });
+  public selectedAuthorId = signal<string | null>(null);
+  public selectedGuesserId = signal<string | null>(null);
 
   public closeGameEmitter = output<void>();
 
@@ -42,6 +50,53 @@ export class TdQuoteGameComponent implements OnDestroy {
 
   showAuthors(): void {
     this.gameStage.set('authors');
+    this.selectedAuthorId.set(null);
+    this.selectedGuesserId.set(null);
+  }
+
+  selectAuthor(authorId: string): void {
+    if (this.gameStage() === 'authors') {
+      this.selectedAuthorId.set(authorId);
+    }
+
+    if (this.gameStage() === 'guesser') {
+      this.selectedGuesserId.set(authorId);
+    }
+  }
+
+  submitSelection(): void {
+    if (this.gameStage() === 'authors') {
+      const correctAuthorId = this.randomQuote()?.by?._id;
+      if (this.selectedAuthorId() && this.selectedAuthorId() === correctAuthorId) {
+        this.gameStage.set('correct');
+        setTimeout(() => {
+          this.gameStage.set('guesser');
+          this.selectedGuesserId.set(null);
+        }, 1500);
+      } else if (this.selectedAuthorId()) {
+        this.gameStage.set('incorrect');
+        setTimeout(() => {
+          this.gameStage.set('authors');
+          this.selectedAuthorId.set(null);
+        }, 1500);
+      }
+      return;
+    }
+
+    if (this.gameStage() === 'guesser') {
+      const guesserId = this.selectedGuesserId();
+      if (!guesserId) {
+        return;
+      }
+      this.isUpdatingScore.set(true);
+      this.tdQuotesService.updateAuthorScore(guesserId).pipe(take(1)).subscribe((updatedAuthor) => {
+        this.store.updateAuthor(updatedAuthor);
+        setTimeout(() => {
+          this.gameStage.set('leaderboard');
+          this.isUpdatingScore.set(false);
+        }, 300);
+      });
+    }
   }
 
   closeGame(): void {
